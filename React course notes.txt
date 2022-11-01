@@ -1,0 +1,87 @@
+JSX vs non-JSX approach:
+
+return (
+		<div>
+			<h2>Let's get started!</h2>
+			<Expenses data={expenses} />
+		</div>
+	);
+
+	// the non-JSX alternative to the above return is the following (jsx basically does this behind the scenes)
+	// JSX permits us to ommit the import of React in every component
+	/*
+		import React from 'react';
+		
+		// first parameter is the tag, second is the arguments (class, etc) and 3rd is a ...children which encompasses the children tags of the element; 3rd param is optional
+		return React.createElement('div', {}, React.createElement('h2', {}), React.createElement(Expenses), {items: expenses});
+	*/
+	
+This is why we need to wrap return contents in a div, because if we wouldn't, we would basically try to return multiple React.createElement(...), which is impossible in Javascript
+
+
+
+Stateless vs Stateful: components that don't change State vs those that do (ex: stateful changes a variable while stateless only displays or returns it)
+
+Controller vs Uncontroller: components that have their logic handled by a parent component vs components that contain their own logic 
+(ex: controller would imply a parent component handling a variable and passing it down to our component after being processed vs uncontrolled would mean that our component contains the logic that changes that variable)
+
+
+props.children contains the element tags within the enclosing component. Ex: <TestComp><p>asd</p><TestComp> -> inside the TestComp component, props.children contains the <p> tag
+
+
+Ways to wrap elements other than <div> tags:
+Create a Wrapper component and use <Wrapper><your_components></Wrapper>
+Wrap it in <></>  (this is dependent on your project setup; needs certain JSX stuff to be installed)
+Wrap it in a React Fragment: import React then user <React.Fragment></React.Fragment> as a Wrapper. OR to avoid React.Fragment, import {Fragment} from 'react' and use <Fragment> directly
+
+To create a portal (which serves to make a component a child of another tag/component) we need to declare a tag (div for example) in the index.html file and then point a portal to it using ReactDOM.createPortal()
+
+
+useEffect() rules: 
+- no dependencies: always runs on re-render
+- empty dependencies: run only one, on first component render (usually page refresh)
+- filled dependencies array: run on every value change of any of the dependencies
+
+As a rule to what dependencies to add, you add what values you use within the function
+EX:
+useEffect(
+		(event) => {
+			setFormIsValid(
+				enteredEmail.includes("@") && enteredPassword.trim().length > 6
+			);
+		},
+		[setFormIsValid, enteredEmail, enteredPassword]
+	);
+	
+useState set functions can be ommited, so setFormIsValid can be excluded from dependencies. Reason for that is React assures that set functions will never change
+
+
+useEffect can return a function (named or anon), which will be a cleanup function. An example of using this is if we set a timer inside our useEffect (let's say setTimeout) and we want to disable it if the useEffect is run again (ex: useEffect runs when a user types something, and we want to wait 1 second before we actually run the useEffect; this way, if the user types 5 letters and stops, the useEffect from the first 4 letters would get cleaned up and only the useEffect of the last letter will be executed).
+This cleanup function runs before the content of the useEffect function BUT it doesn't run on the first render of the component, only when dependencies change.
+Also, for useEffect with empty dependencies, the cleanup function will only run once, if the component is removed (basically a re-render)
+
+
+IMPERATIVE - doing things programatically, calling functions directly, not through any React tools (ex: hooks)
+
+
+React.forwardRef() -> gives ability to use ref on React components:  https://reactjs.org/docs/forwarding-refs.html; the main idea is that custom components cannot have refs, only primitive tag can. But the thing is, custom components return primitive tags in the form of JSX, so we need to forward the tag we need from within the component to the parent component somehow and that's where forwardRef comes in.
+
+
+useReducer() -> a more powerful useState if we need to modify more states at once; rarely used
+
+
+
+
+
+Topics to check:
+
+https://academind.com/tutorials/hide-javascript-code
+https://academind.com/tutorials/rest-vs-graphql
+https://academind.com/tutorials/function-bind-event-execution
+
+
+
+
+
+
+OFF-TOPIC: check Tabnine VSCode plugin

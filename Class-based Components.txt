@@ -1,0 +1,100 @@
+Class-based Components:
+
+Ex:
+
+Function-based: 
+const Button = (props) => {
+	return <button type={props.type}/>
+}
+
+Class-based:
+import { Component } from 'react';
+
+class Button extends Component {
+	render() {
+		return <button type={this.props.type}/>
+	}
+}
+
+In both cases, we need to export Button;
+
+
+render() is a necessary function for a Class-based Component. It is like a main() function, it returns the JSX code we need to render the component
+Extending Component from react, we get access to the props property using this.props (which is identical to how props work in the functional approach)
+NOTE: we can use both approaches combined, class-based within functional and vice versa
+
+STATE MANAGEMENT:
+
+class Users extends Component {
+	constructor() {
+		// NOTE: child classes must always call super() in constructor in Javascript
+		super();
+		this.state = {
+			//all our states in here
+			showUsers: true,
+			someOtherState: ''
+		}
+	}
+	
+	toggleUsersHandler() {
+	// this changes the showUsers state, but leaves the someOtherState state intact; basically only states we specify are changed, lest are left as they were
+		this.setState({showUsers: false})
+		OR
+		this.setState((custState) => {
+			return {showUsers: !curState.showUsers}
+		})
+		// the latter is used if we want to make sure we have the latest state
+	}
+	
+	render() {
+		return (<div>
+		// we call internal functions with this in front
+		<button onClick={this.toggleUsersHandler.bind(this)}/>
+			{this.state.showUsers}
+		</div>)
+	}
+}
+
+Key points: one state object that contains all states (instead of multiple useState in functional approach)
+
+Other equivalents to Hooks:
+
+useEffect(..., []) (no deps) => componentDidMount()
+useEffect(..., [foo]) (with deps) => componentDidUpdate()
+Cleanup function of useEffect => componentWillUnmount()
+
+componentDidUpdate takes two arguments, prevProps and prevState, which we need to be able to compare previous props or states to current props or states in order to avoid infinite loops caused by changing states (if we change state inside componentDidUpdate, the componentDidUpdate is triggered again, causing another state change and so on); this is the same as adding dependencies to useEffect and so on, as these checks are done behind the scenes by React
+ex: prevState.foo !== this.state.foo;
+
+
+ERROR BOUNDARIES:
+
+In order to declare an error boundary, we need to create a class-based component, extend Component and declare an internal function, componentDidCatch(), beside the mandatory render(), which will return this.props.children. The reason it returns the props children is because we want to use the ErrorBoundary as a wrapper over the component we need to protect
+ex:
+
+import {Component} from 'react'
+
+class ErrorBoundary extends Component {
+	constructor() {
+		super();
+		this.state = {hasError: false};
+	}
+	componentDidCatch(error) {
+		this.setState({hasError: true});
+	}
+	
+	render() {
+		if(this.state.hasError) {
+			return <p>Error!</p>;
+		}
+		this.props.children
+	}
+
+}
+export default ErrorBoundary;
+
+The componentDidCatch function is passed an error object which we can use to handle the error (get the error message and such)
+
+We can't use try/catch inside components to return JSX depending on the error status so we need to use Error Boundaries.
+
+
