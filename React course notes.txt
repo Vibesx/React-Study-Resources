@@ -70,6 +70,16 @@ React.forwardRef() -> gives ability to use ref on React components:  https://rea
 useReducer() -> a more powerful useState if we need to modify more states at once; rarely used
 
 
+onBlur event is triggered when you lose focus on a component (ex: click out of an input field)
+
+
+ROUTING
+
+important hooks: 
+- useHistory - used for programmatic routing
+- useLocation - used for getting the path
+
+
 
 
 
@@ -78,7 +88,8 @@ Topics to check:
 https://academind.com/tutorials/hide-javascript-code
 https://academind.com/tutorials/rest-vs-graphql
 https://academind.com/tutorials/function-bind-event-execution
-
+https://academind.com/tutorials/reactjs-a-custom-useform-hook
+useHistory hook
 
 
 

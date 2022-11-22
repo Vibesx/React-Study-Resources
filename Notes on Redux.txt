@@ -1,0 +1,32 @@
+To use redux, we must create a store that takes a reducer function as an argument, then export the store.
+
+Afterwards, we need to import the Provider component from react-redux in the upmost level of the application (usually index.js), where the react dom root is created. Then we wrap the <App/> component with <Provider store={store}> (store will be the store we declared and imported in the index.js file: import store from <path>; ofc naming is up to you)
+
+To use the Redux state, we need to import the useSelector Redux hook from react-redux (useStore is also an option, but useSelector is more specific), which automatically manages subscriptions (create one and even delete it if the component is deleted from DOM). The useSelector takes a function as an argument and that function can have the state as an argument, which grants access to all the members of the state. Afterwards, we just need to extract that data into a const of ours.
+
+Ex:
+
+import { useSelector } from "react-redux";
+
+const ourComp = () => {
+	const foo = useSelector((state) => {return state.foo;})
+}
+
+State is always overwritten, not replaced. So if we have an object with prop1 and prop2 and inside the reducer we only set prop1, prop2 will be undefined.
+It's very important to always create copies of existing state and never mutate the existing state, as this can cause unpredicted behaviour
+
+Redux Toolkit includes Redux but not react-redux 
+
+We can also pass action creators that return functions, as arguments, to the dispatch function. This way, Redux will automatically run the function and also pass the dispatch function down the line so it will be available inside the action creator.
+
+ex: dispatch(sendCartData(cart));
+
+export const sendCartData = (cart) => {
+	return async (dispatch) => {
+		......
+	}
+
+So as a summary, the argumaents that dispatch can receive are:
+	- an action object: {type: '...', etc}
+	- the call of an actions function defined inside a slice: fooActions.fooFunction(<payload_object>)
+	- a function that will return a nested function, which will be called by Redux and will be passed the dispatch function as an argument, allowing it to call multiple nested dispatches; this allows us to declare and call async functions
