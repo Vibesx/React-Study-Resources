@@ -1,0 +1,41 @@
+Switch changed to Routes, imported from same package (react-router-dom)
+
+Route child components are no longer added within the bounds of Route, but instead as a property inside the Route tag, element: <Route><MyComponent></Route> becomes <Route element={<MyComponent />} />; important: the element must be a JSX tag, not an object. This also applies to primitive tags, such as p, div, etc. Basically all JSX code within the tags needs to be included in element
+
+Exact property is included by default in Route components; the opposite of it has now been implemented, in the form of a way of defining a more general path with the help of * (ex: path='/product/*'); but even this approach is subjective to a more efficient algorithm that determines which is the best path to choose from the existing ones (ex: having two routes with paths '/product/*' and '/product/:id', accessing /product/id1 will redirect to the latter Route)
+
+NavLink no longer has the activeClassName property; instead, in order to assign custom styling to the NavLink, we need to use an object that is given to us by React Rounting: navData. NavData contains multiple properties, amongst them being isActive, which tells us if the NavLink is the one active or not. We can then use that inside a function to determine which style to apply. ex: className={(navData) => navData.isActive ? <styling logic>}
+
+Redirect is removed in version 6, replaced by Navigate. By default, <Navigate to=<path>/> will push the new page. To use replace, we can add replace inside the tag: <Navigate replace to=.../> Also, we need to add the Navigate in the element property of Route, as we do with custom components.
+
+Nested Route's need to be encapsulated in a <Routes> tag now.
+
+Routes that contain components with nested Routes need to have "/*" at the end of the path in order to indicate that they contain nested Routes. As a result, the Routes within the child components won't need to contain the root path. 
+Ex: In version 5
+Parent: <Route to="/product"/>   Child: <Route to="/product/new-product"/>
+In version 6
+Parent <Route to="product/*"/>   Child: <Route to="/new-product"/>
+
+Same rules as above apply to Link elements path (<Link to=.../>)
+
+Nested Routes can also be declared in the parent Route, with the addition of a new component inside the child: Outlet
+In version 5:
+Parent:
+<Route...><ChildComp></Route>
+Child:
+<Route....>
+
+In version 6:
+Parent:
+<Route...><Route...></Route></Route>
+Child:
+<Outlet/>
+
+The Outlet basically tells React Router where a nested Route is expected
+
+useHistory Hook is removed, replaced by useNavigate, which returns a function which we can call to navigate to another path.
+Usage: 
+const navigate = useNavigate()
+navigate('/path');
+
+If we want the replace functionality from useHistory, we can pass an object as an argument: navigate('/path', { replace: true })
