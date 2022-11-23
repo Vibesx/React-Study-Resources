@@ -39,3 +39,7 @@ const navigate = useNavigate()
 navigate('/path');
 
 If we want the replace functionality from useHistory, we can pass an object as an argument: navigate('/path', { replace: true })
+
+navigate() also has the possibility to take numbers as arguments, to go down or up the path. Ex: navigate(-2) to go from /path2/path1/path0 to /path2
+
+useBlocker(), usePrompt() and Prompt have been temporarily removed in version 6 and not replaced, so if we use version 6 and need a similar functionality we need to implement a custom one. Might be added later.
