@@ -116,6 +116,48 @@ Form State: this new version of Routing offers us another new hook: useNavigatio
 
 
 
+Deffered Pages:
+Another feature in this new version is the ability to implement deferred pages. What that means is that if we access a page that requires a request to finish in order to get some data to be displayed, nothing will be displayed until the request is finished. A deffered page loads and will display the data when it is fetched. This is achieved by having different sections in our returned JSX code for the body of the page and the displayed data fetched by the request, and using a set of tools to display each element when available.
+EX:
+
+
+
+import { Suspense } from 'react';
+import { useLoaderData, defer, Await } from 'react-router-dom';
+
+import Posts from '../components/Posts';
+import { getSlowPosts } from '../util/api';
+
+function DeferredBlogPostsPage() {
+  const loaderData = useLoaderData();
+
+  return (
+    <>
+      <h1>Our Blog Posts</h1>
+      <Suspense fallback={<p>Loading...</p>}>
+        <Await
+          resolve={loaderData.posts}
+          errorElement={<p>Error loading blog posts.</p>}
+        >
+          {(loadedPosts) => <Posts blogPosts={loadedPosts} />}
+        </Await>
+      </Suspense>
+    </>
+  );
+}
+
+export default DeferredBlogPostsPage;
+
+export async function loader() {
+  return defer({ posts: getSlowPosts() });
+}
+
+In the above example, the page is rendered, showing the h1 element and the <p>Loading...</p> element until the data is fetched successfully. The fallback property takes JSX code or a component for that purpose, as a placeholder to be displayed until the resolve is finished.
+The resolve inside the Await element is what determines when the contents of the Await are displayed. It can also get an errorElement property in case the request fails.
+The deferred functionality is achieved because in the loader return, we call getSlowPosts() without await, so the program continues running without stopping to wait for the request, while the Await listens for the end result of this return. If we were to add await (posts: await getSlowPosts()), we would return to the normal behavior before implementing deferred pages: the whole page would only load when the request is finished.
+
+
+
 
 
 
