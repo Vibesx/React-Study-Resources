@@ -43,3 +43,79 @@ If we want the replace functionality from useHistory, we can pass an object as a
 navigate() also has the possibility to take numbers as arguments, to go down or up the path. Ex: navigate(-2) to go from /path2/path1/path0 to /path2
 
 useBlocker(), usePrompt() and Prompt have been temporarily removed in version 6 and not replaced, so if we use version 6 and need a similar functionality we need to implement a custom one. Might be added later.
+
+
+
+Router v6.4+ changes
+
+Implementation of a loader property for Routes, which allows you to assign a fucntion that will execute automatically on component load. To make use of the data passed by this loader, we need to use the useLoaderData hook.
+
+Nested Routes can now contain the index keyword, which means they are the root path for the parent Route
+ex: <Route path='/'>
+		<Route index/>
+		<Route path='/products'/>
+<Route/>
+Accessing the root path ("/") will lead you to the first Route, while accessing the /products path will lead you to the second Route
+
+For error handling, we now have the errorElement property in which we can either pass some JSX code or an actual custom component we can build for error handling. ex: <Route path=... errorElement={<JSX code/component>}/>. This can be put on every Route independently or on the root Route, so it will apply to children Routes as well. In case of error, the component is replaced by the Error Elements. So for example, if you have a nested Route that has an error element, in case of an error, only that Route is replaced by the error element. In case the error element is moved upwards in the hierarchy, to the root Route, the whole Route with all its children will be replaced by the error element.
+
+We can also use useRouteError to get any error that was caught by the Route. It basically returns an error object that contains things such as message (like the actual error object thrown originally). Then we can use this error object to display the error inside our component
+
+
+For Form submissions, a new Form component was added, which takes a number of properties, such as method and action. method defines the type of submission we want (get, put, post, etc) and the action points to a Route path that it will target. Inside of this Route we must also declare an action, which will be a function that will be called on form submission.
+ex: <Form method="post" action="/product/new">...</Form>
+<Route path="/product/new" action={<some_function>}/>
+
+The insides of the Form are the same as with a normal form.
+
+The action function we declare will receive a form object with a number of fields, amongst which is the request object that will contain all the data from the form. We will be able to extract data from this request object through the name properties of the form fields (ex: <input id=... name="inputName" .../>). To get these fields, we need to call the formData() function contained by the request.
+ex: 
+export async function action({request}) {
+  const formData = await request.formData();
+  const post = {
+    title: formData.get('title'),
+    body: formData.get('post-text')
+  }
+  try {
+    await savePost(post)
+  } catch(err) {
+    if(err.status === 422) {
+      // to be decided
+      throw err;
+    }
+    throw err;
+  }
+  return redirect('/blog')
+}
+
+The redirect function is similar to useNavigation() in order to redirect the user after form submission, but we cannot use useNavigation so we use redirect(<path>) instead, which is also included in react-router-dom
+
+When we throw an error, the whole page is refreshed and the error content is displayed. If we only want to append an error message to the current page, we can return the error instead of throwing it. Then we can retrieve the returned value with the help of useActionData(), which will contain our returned error object, which we can then append to our page to display the error.
+
+ex: 
+
+function OurComponent() {
+	const data = useActionData();
+	...
+	return {data && <some_error_message>}....
+}
+
+export function action(...) {
+	...
+	try {
+		...
+	} catch (err) {
+		return err;
+	}
+}
+
+The logic is that we pass the action function inside the Route to OurComponent (<Route path=... element={OurComponent} action={action}/>), so useActionData will get the returned data from the action function.
+
+
+Form State: this new version of Routing offers us another new hook: useNavigation (!not! useNagivate), which gives us an object that contains the state of the form, which means we don't need to manage it ourselves (ex: set state to submitting when we are submitting the form). The 3 states of navigation are: 'idle', 'loading' and 'submitting'
+
+
+
+
+
+
