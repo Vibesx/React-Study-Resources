@@ -1,0 +1,18 @@
+NEXT JS
+
+Pathing/routing is done different than React: we have a pages folder than contains our pages. The pathing is done as it was in the old days, based on files and folders: a file named store.js based inside the pages/stores folder will be the /stores/store path. index.js will be automatically bound to the base path ("/"), while all other pages will follow the mentioned rule.
+
+Another rule related to index.js is that index.js will not only represent the main root path, but also the root path of any subfolder (ex: /store.js and /store/index.js will have the same path, /store)
+
+We can have dynamic pages (ex: we have a main path /library/ and multiple books, each with its own name, ex: /library/Moby-Dick) by declaring the file name within brackets ([bookId].js) The value of this bookId can be accessed using the useRouter hook, which returns an object that contains the query property, which in turn contains a property named after what we put between the brackets (bookId in our case). 
+ex: const router = useRouter();
+const ourValue = router.query.bookId;
+
+This returns "test" if we access the path /library/test and "Moby_Dick" for /library/Moby_Dick
+
+We can also combine the two rules, the one with index.js and dynamic pages and define a folder named [<page_name>] and within it we can have an index.js page, which would be equivalent to having a js file named [<page_name>].js.
+
+
+Linking: linking is done similar to a tags, only using Link imported from next/link. It takes a href which will be our path to the desired resource.
+ex: <Link href="/store/lidl-nicolina">Lidl Nicolina</Link>
+It also acts similar to an anchor tag, only it prevents the default page reload of an anchor tag, thus keeping our SPA principle.

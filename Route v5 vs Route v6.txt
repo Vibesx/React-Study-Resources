@@ -157,6 +157,21 @@ The resolve inside the Await element is what determines when the contents of the
 The deferred functionality is achieved because in the loader return, we call getSlowPosts() without await, so the program continues running without stopping to wait for the request, while the Await listens for the end result of this return. If we were to add await (posts: await getSlowPosts()), we would return to the normal behavior before implementing deferred pages: the whole page would only load when the request is finished.
 
 
+Manual Form submission without page changing:
+
+We can use the useFetcher hook to manually submit a form, but stay on the same page. Basically if we have a form we want to submit, but we don't want to change the page when doing so, we can use fetcher in order to create a new form and also send the http requests needed.
+ex: const fetcher.useFetcher();
+function someHandler(event) {
+	...
+	fetcher.submit(
+		{...our data},
+		{method: 'post/get/put/etc', action: '/path'}
+	)
+}
+
+<fetcher.Form .....>....</fetcher.Form>
+
+
 
 
 
