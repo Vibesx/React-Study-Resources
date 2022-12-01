@@ -85,6 +85,11 @@ LAZY LOADING:
 We can use:  const ComponentName = React.lazy(() => import(<path>)); instead of: import ComponentName from '<path>'; in order to lazy import a Component, meaning it will only be downloaded when it is used. By default, importing components means they will all be downloaded when the component importing them is rendered. This can cause performance issues. Another requirement for this approach is that you also wrap the lazy loading Component inside a Suspense (imported from react) tag and giving it a fallback property (JSX code or a Component, for example <p>Loading...</p> or some custom loading spinner component).
 
 
+CUSTOM GLOBAL HOOK (global context):
+
+https://www.npmjs.com/package/use-global-hook
+
+
 
 
 

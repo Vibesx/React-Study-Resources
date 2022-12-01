@@ -16,3 +16,44 @@ We can also combine the two rules, the one with index.js and dynamic pages and d
 Linking: linking is done similar to a tags, only using Link imported from next/link. It takes a href which will be our path to the desired resource.
 ex: <Link href="/store/lidl-nicolina">Lidl Nicolina</Link>
 It also acts similar to an anchor tag, only it prevents the default page reload of an anchor tag, thus keeping our SPA principle.
+
+
+SEO and static page generation:
+In React we render pages on the fly, meaning the initial html is rather empty, which is not good from an SEO perspective. Next comes with a solution to this problem by providing two approaches: Static Site Generation (SSG) and Server Side Rendering (SSR.
+
+SSG:
+We can declare and export a function (can be async, which means we can make http calls in it) named getStaticProps, which is a reserved name in NextJS. In here we can generate static content and NextJS makes sure this is executed before rendering the component (running the component function). Also, this function is only automatically run on build, it will never reach the client/end-user.
+This function must return an object and amongst the properties of this object will be a props field, which will hold our data. These props will be passed to the component function just like props are passed from parent components to child components, so we can add it as an argument to the component function and have its contents available.
+
+One downside of this method is that pages can change and we need a way to update the static content on the fly. For that we can pass in another property to the object return by getStaticProps, revalidate. It takes a number which represent the number of seconds after which the data should be refreshed and pages regenerated. This process can also be triggered by rebuilding, but that would be cumbersome, although it might be an optimal solution for sites that do not change often. 
+
+Params can be returned within the function (for example path params, like ids) with the help of the context argument, passed in by default to the getStaticProps function. We can retrieve the params through context.params.<param_name>. For example, from a js file called [storeId].js, we can retrieve the value of storeId with context.params.storeId. 
+
+For dynamic pages (named with brackets), we need to add one more pre-defined function, getStaticPaths. Because these paths are dynamic, and we want static content, we need to let NextJS know what paths we are going to have, so we add them inside this function (can get them from a DB, hardcode them, etc). getStaticPaths returns an object that contains the field paths, which is an array of objects, each containing an "params" object, which will contain all key/value pairs leading to that path.
+Example: for a path structure of [storeId]/index.js -> [employeeId]/index.js, we must return an object that looks like this:
+
+return {
+		fallback: false,
+		paths: [{ params: { storeId: "s1", employeeId: "e1" } }, { params: { storeId: "s2", employeeId: "e2" } }],
+	};
+These will cover paths <root_path>/s1/e1 and <root_path>/s2/e2.
+
+Fallback is another necessary field and it tells NextJS if we have defined all expected paths, or there are still paths that are not defined and we expect them to be dynamically generated on request. False means we have defined all expected paths, and accessing a path would result in a 404 error, while True means we have left out some expected paths. We can set it to True if we only want some pages (ex: our most accessed pages) to be statically generated.
+Another similar option to True is 'blocking' (in quotes). 'blocking' blocks content from being loaded until the page is rendered, while true displays an empty page until content is generated.
+
+SSR:
+This is similar to SSG, we also declare and export a function which can be async, called getServerSideProps, which also has a similar return object, but it is called on every page request, so revalidate would be redundant. It also receives a context argument which contains the request and response objects. (context.res & context.req) 
+
+SSG vs SSR:
+SSG should be used in cases when pages don't change that frequently. SSR should be used when pages change frequently and we need to regenerate them on every request and when we need access to the request and response objects from context.
+
+
+API Routes
+To add API Routes, we need to add a folder called api inside the pages folder (like pages, the api folder is recognized by NextJS). In here, we add js files named after the path we want, which will represent the api route (ex: api/new-store.js will represent the <root_path>/api/new-store api call). This code will only run on the server, so it will never be revealed to the client.
+
+The name of the function inside this file is up to the user, but we must export it. It receives the request and response objects as arguments, which we can use to se things like request method, body, headers, etc. In the response, we can add a status and a message, for example res.status(201).json({message: "Some success message"}). 
+
+The path we mentioned earlier can then be used in a fetch just as a normal api call. (ex: await fetch('/api/new-store')), which will in turn call our method inside the api js file. This function will return a response containing what we added (status, message, etc) which can then be used to handle errors or display a success message.
+
+
+We can set head items, such as title or description, using a special component from next/head named Head, in which we can add usual tags like title, meta and such.
