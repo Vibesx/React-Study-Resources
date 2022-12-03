@@ -1,2 +1,37 @@
 Notes on Testing in React
 
+The Three "A"'s for writing tests:
+
+Arrange - Set up the test data, test conditions and test environment
+Act - Run logic that should be tested (ex: execute function)
+Assert - Compare execution result with expected results
+
+
+Important imports from "@testing-library/react":
+render - renders a certain component; can be used by importing a component in our test js file and pass it as a JSX tag to render
+ex: import Greeting from ...
+render(<Greeting />)
+
+screen - simulates the dom and contains whatever elements we have rendered previously; offers a lot of methods to manipulate/query the dom (ex: get by id/text/title/role, by label text, etc; check docs for more)
+ex:   const ourElement = screen.getByText("Hello World", { exact: false });
+Note: exact refers to exact matches, including case sensitiveness; ex: 'Hello World' / 'Hello World!' / 'Hello world' | would all be different
+Note2: getBy... functions fail if nothing is found (bad for negative cases); queryBy... return null in such cases, allowing the test to continue to assertion
+
+expect - takes an element (returned from a screen query for example) as an argument, returns an object that has a number of check functions available, such as toBeInDocument
+ex: expect(ourElement).toBeInDocument()
+Note: expect can be followed by .not, in order to negate a check
+ex: expect(ourElement).not.toBeInDocument()
+
+
+Important imports from "@testing-library/user-event":
+userEvent - allows us to trigger events, such as click (userEvent.click()). click() takes an element as an argument, on which the event will be triggered
+
+
+Async testing:
+
+screen has getBy... and queryBy... functions, which do not wait for async functions (such as fetches) and therefore execute immediately. For async behaviour, we have findBy... functions, which return promises and execute multiple times until it gets a result. These functions take 3 arguments, the first being the search string, the second being exact: true/false and the third being the timeout period, which sets how many seconds this function should wait for a response (default is 1 second). Of course, because this is returns a promise, it either has to be followed by .then(), or we can add await in front of screen.findBy... , in which case we also need to make the test function async.
+
+
+Mocking:
+
+We can create mockup functions with jest.fn() (jest is a builtin function of the testing library we are using). With this, we can for example replace the native fetch function (window.fetch, to be more specific, but we tipycally only use fetch because window is builtin) with a mock function by simply doing window.fetch = jest.fn(). By doing this, window.fetch will now have a number of functions available in order to mock certain aspects. For example, window.fetch.mockResolvedValueOnce will allow us to mock the response. 
