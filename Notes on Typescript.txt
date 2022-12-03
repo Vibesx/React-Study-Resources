@@ -1,0 +1,92 @@
+Notes on Typescript:
+
+Typescript files cannot be read by the browser, since notations such as a: number aren't recognized by vanilla JS. Therefore, we need to compile these files using the TS compiler: yarn tsc. This command either requires a config file or TS file names we want to compile. After compilation, native JS files are generated for each TS file, that are readable by the browser.
+
+Default type is any, which is a generic type.
+
+Type inference: TS will automatically detect the type in certain cases, such as "let test = "test"" (type will be set to string, similar to doing let test: string = "test")
+
+Union types: we can add multiple types to one variable, using the pipe character. ex: let test: string | number. This means that this variable will expect either a string or a number
+
+Type Aliases: we can name our types and then use the alias as we do with primitive types. This is done by preceding the type alias with the "type", "class" or "interface" keyword
+ex: 
+type Person = { name: string; age: number };
+let personWithAlias: Person;
+
+Generics: we can use Generics as we do in Java: function insertAtBeginning<T>(array: T[], value: T). This can work with inference, hence if we add numbers as values, TS will replace T with number and treat the array and value variables as numbers.
+
+React and Typescript offer us a special type we can give to our functional components: React.FC. This allows us to add props as an argument without passing it a certain type (its type will be given by FC)
+
+Optional types within custom types can be defined by adding ? at the end of the type name (ex: type Person = { name: string, job?: string})
+
+To define a function type, we can use arrow functions: fooFunc: (...args) => <return_type>, where we pass the expected args within the parantheses and declare the expected return type after the arrow. ex: fooFunc (text: string, value: number) => number
+
+
+
+
+Kind of a cheatsheet:
+
+type Person = { name: string; age: number };
+
+// Fallback type: any; also the deafult type if none is mentioned
+
+let anyValue: any;
+// can assign anything to anyValue; kind of redundant with TS, but has its uses
+
+// Primitives: number, string, boolean
+
+let age: number = 24;
+
+age = 12;
+
+let userName: string;
+
+userName = "Leon";
+
+let isInstructor: boolean;
+
+isInstructor = true;
+
+// there are also null and undefined amongst the primitive types, but those are not assignable
+
+// More complex types: arrays, objects
+
+let hobbies: string[];
+
+hobbies = ["Sports", "Cooking"];
+
+// we can create an object blueprint
+let person: { name: string; age: number };
+
+let personWithAlias: Person;
+
+person = { name: "Max", age: 32 };
+
+// array of objects with this blueprint
+let people: { name: string; age: number }[];
+
+// Type inference
+
+let course = "React - The Complete Guide";
+
+// Functions & types
+
+function add(a: number, b: number): number | string {
+	return a + b;
+}
+
+// this function does not return anything, so it will be of type void
+function printSomething(value: any) {
+	console.log(value);
+}
+
+// Generics
+
+function insertAtBeginning<T>(array: T[], value: T) {
+	const newArray = [value, ...array];
+	return newArray;
+}
+
+const demoArray = [1, 2, 3];
+
+const updatedArray = insertAtBeginning(demoArray, -1);
