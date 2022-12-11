@@ -1,0 +1,54 @@
+HTML & CSS Notes
+
+
+HTML:
+
+<em> and <strong> can be used in-line to make a text italic or bold respectively.
+
+<div> and <span> are similar, one is block-type, other is inline.
+
+
+CSS:
+
+display defines type of box: none (hidden), block, inline, inline-box, flex, flexbox, etc. Difference between inline and inline-box is that inline-box allows to set a width and height and also it doesn not ignore top and bottom margins/paddings. Difference between block and inline-block is that inline-block does not add a line-break after the element, so the element can sit next to other elements.
+
+padding/margin template: top right bottom left OR verticla horizontal. ex: padding: 20px 10px 20px 10px is same as 20px 10px
+
+border template: size style color. ex: border: 1px solid red;
+
+Bullet icons for <li> can be altered using list-style-type (circle, lower-roman, etc), or even using list-style-image for a custom bullet. None removes any bullets, being useful for things like navigation menus.
+
+text-decoration can be used to underline or dash through a text.
+
+font-weight can be used to make text bold/normal, while font-style can make it italic/normal.
+
+Inline boxes ignore margin top/bottom, but take into consideration padding top/bottom. Left/right are unaffected on both.
+
+Margin collapse: having two boxes on top of each other, each with their own margin, makes the margin collapse (on top of each other), meaning if one has a margin of 50px and the other 25px, the total margin will be 50px (the bigger of the two). This can be avoided through a number of methods: only set margin-top or margin-bottom on all elements or add an invisible div with a styling of padding:1px between the two elements, which will act as a border. If using flexbox, margins don't collapse and this problem does not apply.
+
+box-sizing: content-box vs border-box -> setting width/height, context-box doesn't take into account padding and border (meaning total width is our width + border + padding). For border-box, the total width includes padding and border (so basically it will be our width - padding - borders)
+
+For text-alignment, we have text-align (right, left, center, etc). For content alignemnt, we have auto margins, floats or flexbox. Floats and flexbox will be covered later. For auto margins, we need to set the width/height for each margin set (if we want to only set margin auto horizontally, we only need width, if we only want it vertically, we need height, for both, you get the idea). It is set to auto by replacing the size with auto: 
+margin: 20px auto (top/bottom margin of 20px and centered on right/left)
+
+To override default styles, we can use the universal CSS selector, "*":
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+This would eliminate the default margins and paddings set by the browser by default.
+
+Classes precedence: if we have two classes that modify the same property and both of them ge applied to the same element, the class lower down in the css file takes precedence (if multiple css files are loaded, the class in the latest loaded css file applies)
+ex: 
+<p class="first-class second-class"></p>
+.first-class {
+	width: 300;
+	height: 200;
+}
+.second-class {
+	height: 100;
+}
+p will have a width and height of 300/100.
+
+
