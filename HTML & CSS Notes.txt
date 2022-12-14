@@ -1,11 +1,70 @@
 HTML & CSS Notes
 
 
+Basic html page template:
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Title</title>
+    <link rel='stylesheet' href='styles.css'/>
+  </head>
+  <body>
+    <div class='page'>
+      <div class='menu'>Menu</div>
+      <div class='sidebar'>Sidebar</div>
+      <div class='content'>Content</div>
+      <div class='footer'>Footer</div>
+    </div>
+  </body>
+</html>
+
+
+
+Some CSS sizing rules from the internet:
+
+----
+px: Setting base size for your project (define on body). Typically used minimally, with em doing the brunt of hte work
+
+rem: Setting relative size (headings, body text, etc). Used liberally for 'generic ui elements' and often avoided for specifics.
+
+em: Setting styles inline with your content (subscript, superscript, 'effects' on your items that are dependent on the item's size, etc). Used liberally for 'custom ui elements' and often avoided for generics. iirc it represents uppercase letter scale of the font.
+
+vw/vh: Filling viewports, often used alongside media queries. Typically used for wrappers around your content.
+
+vmin/vmax: Filling viewports based on the smallest/largest available size, often used alongside media queries. Typically used for wrappers around your content.
+
+%: use when parent is a fixed size, or to 100% fill a container, often used alongside media queries. Typically used in subwrappers to scale content.
+
+ch: explicitly defining width of a section of text, typically used for paragraphs and inputs
+
+lh: vertically aligning block elements with text, typically used with inline block elements that need to be aligned along a center horizontal axis
+
+ex: rarely used over em, but typically for vertical measurements of text. iirc represents lowercase letter scale of the font.
+----
+----
+Rem for general sizing ( texts, margin, paddings, etc) bonus points if you enforce a scale ( for example always use multiples of 4 ) -em for text size relative to parent
+
+Vw/vh when you need to do something relative to screen size ( "I want this element to be exactly half the screen height" )
+
+% is usually used along with transforms or sizing of elements relative to parent.
+----
+
+
+
 HTML:
 
 <em> and <strong> can be used in-line to make a text italic or bold respectively.
 
 <div> and <span> are similar, one is block-type, other is inline.
+
+We can link to certain parts of a page by providing an id to the element we want to focus on and adding it at the end of the href of an a link:
+<p id="focus-target"></p>
+...
+<a href="index.html#focus-target"></a> (index.html being the page the p is part of)
+If we link to an element on the same page, we can ommit the URL entirely and only point to #focus-target
+
 
 
 CSS:
@@ -50,5 +109,37 @@ ex:
 	height: 100;
 }
 p will have a width and height of 300/100.
+class="first-class second-class" and class="second-class first-class" are the same, order here does not affect precedence.
+
+
+Child combinator: we can style direct children of elements by using the ">" sign. ex: div > .testClass will reffer to children of divs that have the class of testClass.
+
+Main pseudo-classes for links: a:link, a:visited, a:hover, a:active . Can be combined, such as a:visited:hover (hover over visited link) or a:visited:active (clicking on visited link)
+
+Precedence is overriden by specificity. Order is as follows (from greatest to least):
+- id selectors: #button-2
+- class + pseudo-class: .button:link
+- element type + pseudot-class AND class + children: a:link AND .some-class p
+- class selectors: .button
+- element type selectors: div
+
+
+Floats:
+float right/left to align block elements to right or left (margin auto still for center). 
+clear: right/left/both to make an element ignore float right/left or both.
+
+By adding an "overflow: hidden" declaration to a container div, we’re telling it to recognize the height of any floated elements it contains.
+
+To summarize, when you have an extra unfloated HTML element at the bottom of a container div, use the clear solution. Otherwise, add an overflow: hidden declaration to the container element. The underlying idea for both options is that you need a way to tell the browser to incorporate floats into the height of their container element in order for their backgrounds to show up.
+
+
+FLEXBOX:
+
+We define an element as a flex container by adding "display: flex;" to its CSS. 
+
+We align items within the flex container with the properties: flex-start / center / flex-end / space-around / space-between. These are applied to the container, not the child elements.
+
+
+
 
 
