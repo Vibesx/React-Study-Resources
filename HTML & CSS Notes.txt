@@ -137,7 +137,30 @@ FLEXBOX:
 
 We define an element as a flex container by adding "display: flex;" to its CSS. 
 
-We align items within the flex container with the properties: flex-start / center / flex-end / space-around / space-between. These are applied to the container, not the child elements.
+We align items horizontally within the flex container with the property justify-content and values: flex-start / center / flex-end / space-around / space-between. These are applied to the container, not the child elements.
+
+We align items vertically within the flex container with the property align-center and values: center, flex-start (top), flex-end (bottom), stretch, baseline. Stretch stretches the element on the full height of the parent. For baseline, check https://stackoverflow.com/questions/34606879/whats-the-difference-between-flex-start-and-baseline. For short, flex-start aligns the top of the child items, baseline aligns the bottoms of the content of the child items.
+
+space-around and space-between automatically distributes space to either side of each item of the container. The difference between the two is that space-around also allocates space before the first item and after the last, while the space-between one only allocates space between elements.
+
+We can modify the orientation of our flex items by using flex-direction. For example, default is row (horizontal), but we can opt for column for vertical alignment. If we switch to vertical alignment, horizontal and vertical alignment properties switch, justify-content being for verticality and vice-versa. We can also use row-reverse or column-reverse to display items in reverse order.
+
+We can align the items within a container (children) with align-items.
+
+FLEX ITEM ORDER:
+
+We can add an order property to flex items (default is 0) so that we can move it right or left (can take negative numbers).
+
+We can use align-self on item classes in order to override the align-items of the parent container.
+
+Using the flex property, we can set the ratio of space that a particular element should ocupy of the parent. For example, if we add 3 elements to a parent and set flex: 0.3; each element will take 30% of the parent and leave 10% free space. Setting it to 1 will mean all elements will take equal parts of the whole space. Setting two of them to 1 and the last to 2 will mean the last one will take twice as much space as each of the other two. This can help us with scaling individual containers within their parents.
+
+We can use flex: initial; on individual items and set static sizes. 
+Ex: we can set a general flex: 1 to 3 items, then on two individual items set a flex: initial; with width of 300px; On resizing the page, the one item that has a flex of 1 will be resized, while the ones that have a width of 300px will stay the same.
+
+An alternative to using extra divs in order to align a group of items to the left or right, we can use margin-left/margin-right: auto, which uses up all the space left to the side of the element (margin-left: auto "glues" the element to the right of the container, opposite for margin-right). So we can use, for example, justify-content: space-between for 3 elements, but we want the last two to be next to each other. We can put the last two in a separate container, but to avoid this, we can se the middle one to margin-left: auto, which would yield the same result.
+
+
 
 
 
