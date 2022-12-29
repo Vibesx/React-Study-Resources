@@ -69,7 +69,7 @@ If we link to an element on the same page, we can ommit the URL entirely and onl
 
 CSS:
 
-display defines type of box: none (hidden), block, inline, inline-box, flex, flexbox, etc. Difference between inline and inline-box is that inline-box allows to set a width and height and also it doesn not ignore top and bottom margins/paddings. Difference between block and inline-block is that inline-block does not add a line-break after the element, so the element can sit next to other elements.
+display defines type of box: none (hidden), block, inline, inline-box, flex, flexbox, etc. Difference between inline and inline-block is that inline-block allows to set a width and height and also it doesn not ignore top and bottom margins/paddings. Difference between block and inline-block is that inline-block does not add a line-break after the element, so the element can sit next to other elements.
 
 padding/margin template: top right bottom left OR verticla horizontal. ex: padding: 20px 10px 20px 10px is same as 20px 10px
 
@@ -159,6 +159,120 @@ We can use flex: initial; on individual items and set static sizes.
 Ex: we can set a general flex: 1 to 3 items, then on two individual items set a flex: initial; with width of 300px; On resizing the page, the one item that has a flex of 1 will be resized, while the ones that have a width of 300px will stay the same.
 
 An alternative to using extra divs in order to align a group of items to the left or right, we can use margin-left/margin-right: auto, which uses up all the space left to the side of the element (margin-left: auto "glues" the element to the right of the container, opposite for margin-right). So we can use, for example, justify-content: space-between for 3 elements, but we want the last two to be next to each other. We can put the last two in a separate container, but to avoid this, we can se the middle one to margin-left: auto, which would yield the same result.
+
+The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.
+ex: flex-wrap: nowrap; /* Default value */
+flex-wrap: wrap;
+flex-wrap: wrap-reverse;
+
+
+POSITIONING:
+
+Available positions: static (default), relative, absolute, fixed. Relative means the offset is relative to the original object position (where it should be with static positioning). Absolute is relative to the browser window (left 30px for example will place it 30px right of the left edge of the browser window), except for special cases (see below). Fixed is almost the same as absolute, only the element does not scroll with the rest of the page (this is how we can achieve those cool effects where the background or certain elements stay static on the page when scrolling).
+
+Coordinates for absolute elements are always relative to the closest container that is a positioned element. It only falls back to being relative to the browser when none of its ancestors are positioned. So, if any ancestor of our element has another position other than static set, it would be absolute in accordance to that ancestor.
+
+Another effect of absolute positioning is the fact that the element is removed from the flow. For example, if we had 3 elements inside a container and set it to flexbox, with a justify of flex-start, all 3 elements will be placed one after the other. If we'd set the middle one to position: absolute, the first and third element would now be next to each other and the second one would be "floating" above them.
+
+The top, bottom, left, and right properties are used with position to set the placement of an element. They only have an effect on positioned elements, which are elements with the position property set to anything other than static. For example: relative, absolute, fixed, or sticky. ex: {position: relative; top: 1px;}
+
+Top moves it down, left moves it right, and so on. Negative values can be used to achieve the opposite effect (top: 10px is the same as bottom: -10px).
+
+
+Elements Depth (Z-Index)
+
+You can set which elements should be on top of others using the z-index. The higher this index, the bigger the priority. (z-index 2 will be in front of z-index 1).
+
+
+
+RESPONSIVE DESIGN:
+
+This should be added in the html under the <head> tag in order for media queries to work:
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+To disable viewport zooming, add this:
+
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+
+
+Media queries always begin with the @media “at-rule” followed by some kind of conditional statement, and then some curly braces. Inside the curly braces, you put a bunch of ordinary CSS rules. The browser only pays attention to those rules if the condition is met.
+
+example:
+at-rule  media type            media feature
+@media   only screen   and   (max-width: 400px) {
+	<some css rules...>
+}
+
+The only screen “media type” means that the contained styles should only be applied to devices with screens (opposed to printed documents, like when you hit Cmd+P in a browser). The min-width and max-width parts are called “media features”, and they specify the device dimensions you’re targeting.
+
+More info: https://developer.mozilla.org/en-US/docs/Web/CSS/@media
+
+
+RESPONSIVE IMAGES:
+
+SVG's are vector-based, so they will automatically fit the page regardless of resolution. For Chrome, we need to add a styling to the image in order for this to apply: width: 100%; If we don't, the image will always stay the same size on window resizing.
+
+Retina vs non-retina displays: 
+
+We can set multiple sources for an image for retina or non-retina displays, using srcset:
+
+<img src='illustration-small.png'
+       srcset='images/illustration-small.png 1x,
+               images/illustration-big.png 2x'
+       style='max-width: 500px'/>
+
+The srcset attribute points to a list of alternative image files, along with properties defining when the browser should use each of them. The 1x tells the browser to display illustration-small.png on standard-resolution screens. The 2x means that illustration-big.png is for retina screens. Older browsers that don’t understand srcset fall back to the src attribute.
+
+OR
+
+<img src='images/photo-small.jpg'
+         srcset='images/photo-big.jpg 2000w,
+                 images/photo-small.jpg 1000w'
+         sizes='(min-width: 960px) 960px,
+                100vw'/>
+
+We have the same srcset element as the last section, but instead of the 1x and 2x descriptors, we’re providing the inherent physical width of the image. The 2000w tells the browser that the photo-big.jpg file is 2000 pixels wide. Likewise, the 1000w means photo-small.jpg has a width of 1000 pixels. If you’re wondering about that w character, it’s a special unit used only for this kind of image optimization scenario.
+
+Image width alone isn’t enough for a device to determine which image it should load. We also need to tell it what the final rendered width of the image will be. That’s where the sizes attribute comes in. It defines a series of media queries along with the image’s rendered width when that media query is in effect.
+
+
+Instead of feeding differnt sizes of pictures, we can also crop images. For this, we need the <picture> and <source> elements. The former is just a wrapper, and the latter conditionally loads images based on media queries.
+ex:
+<picture>
+      <source media='(min-width: 401px)'
+              srcset='images/photo-big.jpg'/>
+      <source media='(max-width: 400px)'
+              srcset='images/photo-tall.jpg'/>
+      <img src='images/photo-small.jpg'/>
+    </picture>
+
+
+
+MISCELANEOUS:
+
+cursor: pointer; changes the cursor to a pointer upon hover.
+
+How to display an element on hover with CSS example:
+CSS:  .dropdown:hover .features-menu {
+		  display: flex;                    /* Leave everything else alone */
+		  flex-direction: column;
+		  background: #B2D6FF;
+	      etc......
+	  }
+
+	  .features-menu {
+	    display: none;
+	  }
+
+HTML: <li class="dropdown">
+		<span>Features ▾</span>
+		<ul class="features-menu">
+			...
+		</ul>
+	</li>			
+
+
 
 
 
