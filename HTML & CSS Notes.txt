@@ -66,6 +66,68 @@ We can link to certain parts of a page by providing an id to the element we want
 If we link to an element on the same page, we can ommit the URL entirely and only point to #focus-target
 
 
+HTML Semantics:
+
+h1-h6 for headers.
+
+<article> : The <article> element represents an independent article in a web page. It should only wrap content that can be plucked out of your page and distributed in a completely different context.
+<article>’s are essentially mini web pages in your HTML document. They have their own headers, footers, and document outline that are completely isolated from the rest of your site.
+
+<section> : The <section> element is sort of like an <article>, except it doesn’t need to make sense outside the context of the document. 
+Also note that each <section> element should contain at least one heading, otherwise it will add an “untitled section” to your document outline. This should generally be avoided when using <section> elements.
+
+<nav> : 
+The <nav> element lets you mark up the various navigation sections of your website. This goes for the main site navigation, links to related pages in a sidebar, tables of content, and pretty much any group of links. 
+
+<header> : The <header> element is a new piece of semantic markup, not to be confused with headings (the <h1>-<h6> elements). It denotes introductory content for a section, article, or entire web page. “Introductory content” can be anything from your company’s logo to navigational aids or author information.
+
+<footer> : Conceptually, footers are basically the same as headers, except they generally come at end of an article/website opposed to the beginning. Common use cases include things like copyright notices, footer navigation, and author bios at the end of blog posts.
+
+<aside> : Headers and footers are ways to add extra information to an article, but sometimes we want to remove information from an article. For example, a sponsored blog post might contain an advertisement about the sponsoring company; however, we probably don’t want to make it part of the article text. This is what the <aside> element is for.
+In addition to advertisements, <aside> is also appropriate for highlighting definitions, stats, or quotations. If it looks different than the rest of the article, chances are it’s an aside.
+
+We can also use asides, headers and footers within sections and articles to better structure them.
+
+<time> : The <time> element represents either a time of day or a calendar date. Providing a machine-readable date makes it possible for browsers to automatically link it to users’ calendars and helps search engines clearly identify specific dates.
+ex: <time datetime='2017-1-3'>January 3rd</time>
+The machine-readable date is defined in the datetime attribute. An easy way to remember the date format is that it goes from largest time period to smallest: year, month, then date. Note that even though the year isn’t included in the human-readable text, this tells search engines that our article was published in 2017.
+It’s possible to include times and time zones inside of datetime, too. If we wanted to add a 3:00pm PST time to our publish date, we’d use the following:
+<time datetime='2017-1-3 15:00-0800'>January 3rd</time>
+The time itself is in 24-hour format, and the -0800 is the time zone offset from GMT (in this case, -0800 represents Pacific Standard Time).
+
+<address> : The <address> element is like <time> in that it doesn’t deal with the overall structure of a document, but rather embellishes the parent <article> or <body> element with some metadata. It defines contact information for the author of the article or web page in question. <address> should not be used for arbitrary physical addresses.
+ex: <address>
+    Please contact <a href='mailto:troymcclure@example.com'>Troy
+    McClure</a> for questions about this article.
+  </address>
+By default, this will be styled the same way as <em>, but you can change that with a simple CSS rule.
+
+<figure> and <figcaption> : Last, but certainly not least, are the <figure> and <figcaption> elements. The former represents a self-contained “figure”, like a diagram, illustration, or even a code snippet. The latter is optional, and it associates a caption with its parent <figure> element.
+
+A common use case for both of these is to add visible descriptions to the <img/> elements in an article, like so:
+
+<section>
+  <h2>The Document Outline</h2>
+  <p>HTML5 includes several “sectioning content” elements that
+    affect the document outline.</p>
+
+  <figure>
+    <img src='semantic-elements.png'
+         alt='Diagram showing <article>, <section>, and <nav> elements'/>
+    <figcaption>New HTML5 semantic elements</figcaption>
+  </figure>
+  <!-- ... -->
+The alt attribute is closely related to the <figcaption> element. alt should serve as a text replacement for the image, while <figcaption> is a supporting description displayed with either the image or its text-based equivalent.
+
+When using <figcaption> in the above manner, you can safely omit an image’s alt attribute without hurting your SEO. Depending on what kind of images you’re working with, it may be more convenient (and less redundant) to have visible <figcaption>’s that describe them opposed to invisible alt attributes.
+
+All these semantics elements were introduced in HTML5. For legacy browsers, we should add the following line in CSS, so that they will be treated as block boxes (like div's):
+
+section, article, aside, footer, header, nav {
+  display: block;
+}
+
+
 
 CSS:
 
@@ -147,6 +209,26 @@ We can modify the orientation of our flex items by using flex-direction. For exa
 
 We can align the items within a container (children) with align-items.
 
+The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.
+ex: flex-wrap: nowrap; /* Default value */
+flex-wrap: wrap;
+flex-wrap: wrap-reverse;
+
+flex-flow : flex-flow is the combination of flex-direction and flex-wrap. It accepts two values, which are the values we would give to direction and wrap.
+ex: flex-flow: column wrap /// flex-flow: column-reverse wrap-reverse /// etc...
+
+You can use align-content to set how multiple lines are spaced apart from each other. This property takes the following values:
+
+flex-start: Lines are packed at the top of the container.
+flex-end: Lines are packed at the bottom of the container.
+center: Lines are packed at the vertical center of the container.
+space-between: Lines display with equal spacing between them.
+space-around: Lines display with equal spacing around them.
+stretch: Lines are stretched to fit the container.
+
+This can be confusing, but align-content determines the spacing between lines, while align-items determines how the items as a whole are aligned within the container. When there is only one line, align-content has no effect.
+
+
 FLEX ITEM ORDER:
 
 We can add an order property to flex items (default is 0) so that we can move it right or left (can take negative numbers).
@@ -158,12 +240,20 @@ Using the flex property, we can set the ratio of space that a particular element
 We can use flex: initial; on individual items and set static sizes. 
 Ex: we can set a general flex: 1 to 3 items, then on two individual items set a flex: initial; with width of 300px; On resizing the page, the one item that has a flex of 1 will be resized, while the ones that have a width of 300px will stay the same.
 
-An alternative to using extra divs in order to align a group of items to the left or right, we can use margin-left/margin-right: auto, which uses up all the space left to the side of the element (margin-left: auto "glues" the element to the right of the container, opposite for margin-right). So we can use, for example, justify-content: space-between for 3 elements, but we want the last two to be next to each other. We can put the last two in a separate container, but to avoid this, we can se the middle one to margin-left: auto, which would yield the same result.
+There is also the "auto" option for flex, which automatically sizes the containers based on how much space their content is taking.
 
-The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.
-ex: flex-wrap: nowrap; /* Default value */
-flex-wrap: wrap;
-flex-wrap: wrap-reverse;
+An alternative to using extra divs in order to align a group of items to the left or right, we can use margin-left/margin-right: auto, which uses up all the space left to the side of the element (margin-left: auto "glues" the element to the right of the container, opposite for margin-right). So we can use, for example, justify-content: space-between for 3 elements, but we want the last two to be next to each other. We can put the last two in a separate container, but to avoid this, we can set the middle one to margin-left: auto, which would yield the same result.
+
+
+CSS GRID:
+
+To set an element as a grid container, we use display: grid;
+
+We can set how many columns/rows an element should take of the container using the properties grid-column-start/grid-column-end, grid-row-start/grid-row-end, grid-column (start and end combined), grid-row (start and end combined) or grid-area (all 4 combined).
+ex: grid-column-start: 1
+grid-row: 2 / 5
+grid-area: 1 / 1 / 3 / 5
+
 
 
 POSITIONING:
@@ -237,7 +327,7 @@ We have the same srcset element as the last section, but instead of the 1x and 2
 Image width alone isn’t enough for a device to determine which image it should load. We also need to tell it what the final rendered width of the image will be. That’s where the sizes attribute comes in. It defines a series of media queries along with the image’s rendered width when that media query is in effect.
 
 
-Instead of feeding differnt sizes of pictures, we can also crop images. For this, we need the <picture> and <source> elements. The former is just a wrapper, and the latter conditionally loads images based on media queries.
+An alternative would be the usage of the <picture> and <source> elements. The former is just a wrapper, and the latter conditionally loads images based on media queries.
 ex:
 <picture>
       <source media='(min-width: 401px)'
@@ -246,6 +336,11 @@ ex:
               srcset='images/photo-tall.jpg'/>
       <img src='images/photo-small.jpg'/>
     </picture>
+
+Conceptually, this is pretty similar to using media queries in CSS. In each <source> element, the media attribute defines when the image should be loaded, and srcset defines which image file should be loaded. The <img/> element is only used as a fallback for older browsers.
+
+
+While it is possible to combine the best of both worlds, it gets complicated real quick. Our recommendation is to stick to the 1x and 2x version of srcset for images less than 600 pixels wide, use the srcset plus sizes method from the previous section for bigger photos, and reserve <picture> for when you’re trying to do something real fancy with your designer.
 
 
 
