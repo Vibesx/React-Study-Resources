@@ -128,6 +128,29 @@ section, article, aside, footer, header, nav {
 }
 
 
+FORMS:
+
+Radio buttons: 
+Every radio button group you create should:
+
+Be wrapped in a <fieldset>, which is labeled with a <legend>.
+Associate a <label> element with each radio button.
+Use the same name attribute for each radio button in the group.
+Use different value attributes for each radio button.
+
+Unlike text fields, the user can’t enter custom values into a radio button, which is why each one of them needs an explicit value attribute. This is the value that will get sent to the server when the user submits the form. It’s also very important that each radio button has the same name attribute, otherwise the form wouldn’t know they were part of the same group.
+
+Textareas:
+By default, many browsers let the user resize <textarea> elements to whatever dimensions they want. We disable this with the "resize: none" property.
+Note that this isn’t self-closing like the <input/> element, so you always need a closing </textarea> tag. If you want to add any default text, it needs to go inside the tags opposed to a value attribute.
+
+Checkboxes:
+Checkboxes are sort of like radio buttons, but instead of selecting only one option, they let the user pick as many as they want. This simplifies things, since the browser doesn’t need to know which checkboxes are part of the same group. In other words, we don’t need a <fieldset> wrapper or shared name attributes. 
+
+
+<label> can be attached to an input through the "for" property, which takes an id as a value, or by encapsulating the input (ex: <label><input/><label>)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CSS:
 
@@ -159,6 +182,8 @@ To override default styles, we can use the universal CSS selector, "*":
 	box-sizing: border-box;
 }
 This would eliminate the default margins and paddings set by the browser by default.
+
+* can also be used to denote all tags under a certain selector. Ex: .my-class > * {...} will apply styling rules to all element types under .my-class
 
 Classes precedence: if we have two classes that modify the same property and both of them ge applied to the same element, the class lower down in the css file takes precedence (if multiple css files are loaded, the class in the latest loaded css file applies)
 ex: 
@@ -249,10 +274,31 @@ CSS GRID:
 
 To set an element as a grid container, we use display: grid;
 
+We define the layout (template) of the grid using grid-template-columns and grid-template-rows. We give these percentage values that indicate how much space each row/column should take of the whole container.
+ex: 
+grid-template-columns: 50% 25% 25%;
+grid-template-rows: 20% 20% 20% 40%;
+
+We can combine the two into grid-template, which takes 2 sets of dimensions, separated by a slash
+ex:
+grid-template: 50% 25% 25% / 200px 25% 25% 10rem
+To avoid repeating ourselves, we can use a special function, repeat, that takes two arguments: first one is how many repeats we want and the second one is the size we want to repeat.
+ex: 20% 20% 20% 40% -> repeat(3, 20%) 40%
+repeat can also take different arguments, auto-fit and minmax(value1, value2) in order to automatically fit the columns depending on screen size. ex: repeat(auto-fit, minmax(300px, 1fr)).
+
+We can also use the other measuring units instead of percentages, such as px, em, rem, etc.
+Besides all these units, grid introduces its own unit, the fractional "fr". This divides the available space into fractions based on the total fractional units.
+Ex: 1fr 3fr 3fr  divides the space into 7 equal parts and allocates them accordingly (1/7 3/7 3/7)
+
+All these units can be used together. If fractals are used together with other units, the space divided by them is the space that is left after we subtract the other units.
+Ex: 50px 1fr 2fr 1fr 100px will create a 50px space at the beginning, a 100px space at the end and the remaining space inbetween will be equally divided into 4 parts and distributed as 1/4, 2/4, 1/4
+
 We can set how many columns/rows an element should take of the container using the properties grid-column-start/grid-column-end, grid-row-start/grid-row-end, grid-column (start and end combined), grid-row (start and end combined) or grid-area (all 4 combined).
 ex: grid-column-start: 1
 grid-row: 2 / 5
-grid-area: 1 / 1 / 3 / 5
+grid-area: 1 / 1 / 3 / 5 (row start / column start / row end / column end)
+
+We can use order similar to flex to set an order for our elements.
 
 
 
@@ -367,6 +413,36 @@ HTML: <li class="dropdown">
 		</ul>
 	</li>			
 
+
+Attribute selectors:
+
+The CSS attribute selector matches elements based on the presence or value of a given attribute.
+ex:
+/* <a> elements with a title attribute */
+a[title] {
+  color: purple;
+}
+
+/* <a> elements with an href matching "https://example.org" */
+a[href="https://example.org"]
+{
+  color: green;
+}
+
+/* <a> elements with an href containing "example" */
+a[href*="example"] {
+  font-size: 2em;
+}
+
+/* <a> elements with an href ending ".org" */
+a[href$=".org"] {
+  font-style: italic;
+}
+
+/* <a> elements whose class attribute contains the word "logo" */
+a[class~="logo"] {
+  padding: 2px;
+}
 
 
 
