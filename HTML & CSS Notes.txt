@@ -389,6 +389,106 @@ Conceptually, this is pretty similar to using media queries in CSS. In each <sou
 While it is possible to combine the best of both worlds, it gets complicated real quick. Our recommendation is to stick to the 1x and 2x version of srcset for images less than 600 pixels wide, use the srcset plus sizes method from the previous section for bigger photos, and reserve <picture> for when you’re trying to do something real fancy with your designer.
 
 
+TYPOGRAPHY:
+
+Main modern font style formats: WOFF and WOFF2.
+
+To use a downloaded font, we need to embed it into our stylesheet with the @font-face “at-rule”. Web fonts must always be included at the top of a stylesheet with something along the lines of:
+
+@font-face {
+  font-family: 'Roboto'; /* font name */
+  src: url('Roboto-Light-webfont.woff') format('woff');  /* path to font and font format */
+}
+
+The font-family property defines how we’ll refer to this font later on. This operates as an internal label, so it can be anything you want. It doesn’t need to relate to the official name of the font, but it’s usually more intuitive if it does.
+
+The CSS font-family property defines which font a particular HTML element uses. After adding our @font-face at-rule, we can use Roboto as a valid value for font-family anywhere else in our stylesheet.
+
+We can then make a font-family the default for our entire project by changing the font-family in the body selector of our css file:
+
+body {
+	font-family: <font1>, <font2>, <fallback_font>, etc...;
+}
+
+We can change font-family at any granular level, from whole <body> to a simple <div>
+
+A font family should include multiple styles for a single font, including strong (bold) and em (italic) styles. If these are not present, the browser will attempt to "fake" them, but this might result in "cheap" looking results. We can disable font-synthesis, which is the functionality of faking a font style, by adding it as a css rule: font-synthesis: none; Note this will only work on Firefox, not on Chrome or Safari (according to a 2017 tutorial... maybe it works now)
+
+Multiple Font Faces:
+
+To maintain the familial relationship between multiple font faces, they all need to share the same font-family.
+ex: 
+@font-face {
+  font-family: 'Roboto';
+  src: url('Roboto-Light-webfont.woff') format('woff');
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('Roboto-LightItalic-webfont.woff') format('woff');
+  font-style: italic;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('Roboto-Bold-webfont.woff') format('woff');
+  font-style: normal;
+  font-weight: 700;
+}
+
+Remote fonts:
+We can also use remote fonts (ex: Google Fonts) by adding a <link> to them in our <head> section, containing the url in its href, after which we can use the imported font family as we did above.
+ex: <link href="https://fonts.googleapis.com/css?family=UnifrakturMaguntia" rel="stylesheet">
+
+
+Paragraph Indents:
+You should either use a first-line indent or a margin between paragraphs, never both.
+ex:
+Paragraph one
+	Paragraph two
+OR
+Paragraph one
+
+Paragraph two
+
+We can also set indent through css, using "text-indent" and setting a size value (px, em, etc). 
+It is also not advised to indent the first paragraph, so we could use :first-of-type when styling to set text-indent: 0.
+
+Justified text:
+Justified text is created by subtly adjusting the space between words/letters and splitting long words with hyphens until each line is the same width. Without a high-quality hyphenation engine, justified text results in awkwardly large spaces between words. These uneven spaces make it harder for the eye to move horizontally across the text.
+
+Vertical text spacing:
+Just as alignment isn’t an arbitrary decision, neither is the space between text. In this section, we’re concerned with the responsible use of three CSS properties:
+
+margin-top (or padding-top)
+margin-bottom (or padding-bottom)
+line-height
+
+The first two should be pretty familiar by now, and they define the vertical space between separate paragraphs. The new line-height property determines the amount of space between lines in the same paragraph. 
+
+Line length:
+“Line length” or “measure” refers to the horizontal length of your text. You can think of it as the number of characters or words that fit into a single line. Measure has everything to do with the following CSS properties:
+
+width
+margin-left (or padding-left)
+margin-right (or padding-right)
+
+A good rule-of-thumb is to limit the number of characters on a single line to around 80.
+
+A few final guidelines:
+
+Use a font-size between 14px and 20px for the body element.
+Use “curly quotes” and apostrophes with the &rsquo;, &lsquo;, &rdquo;, and &ldquo; HTML entities.
+Use proper dashes (&ndash;, &mdash;) and other symbols (&copy;).
+Don’t use text-decoration: underline except for hover states.
+Use real italic fonts over synthesized ones if not it’s too much of a performance burden.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 MISCELANEOUS:
 
